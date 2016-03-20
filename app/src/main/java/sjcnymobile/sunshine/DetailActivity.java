@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
@@ -83,10 +84,12 @@ public class DetailActivity extends ActionBarActivity {
                 String humidity = intent.getStringExtra("humidity");
                 String pressure = intent.getStringExtra("pressure");
                 String wind = intent.getStringExtra("wind");
-                ((TextView) rootView.findViewById(R.id.detail_text1)).setText(forecastStr);
+                String icon = intent.getStringExtra("icon");
+                        ((TextView) rootView.findViewById(R.id.detail_text1)).setText(forecastStr);
                 ((TextView) rootView.findViewById(R.id.detail_text2)).setText(humidity);
                 ((TextView) rootView.findViewById(R.id.detail_text3)).setText(pressure);
                 ((TextView) rootView.findViewById(R.id.detail_text4)).setText(wind);
+                ((TextView) rootView.findViewById(R.id.iconImage)).setText(icon);
 
             }
 
