@@ -9,29 +9,35 @@
     android:paddingBottom="16dp"
     tools:context="sjcnymobile.sunshine.PlaceholderFragment">
 
-    <Button
-        android:layout_width="102dp"
-        android:layout_height="wrap_content"
-        android:text="button"
-        android:id="@+id/button"
-        android:layout_gravity="right|top"
-        android:layout_alignBottom="@+id/editText"
-        android:layout_alignParentEnd="true" />
-
-    <EditText
-        android:layout_width="138dp"
-        android:layout_height="31dp"
-        android:id="@+id/editText"
-        android:layout_gravity="left|top"
-        android:layout_marginTop="46dp"
-        android:layout_alignParentTop="true"
+    <ListView
+        android:id="@+id/listview_forecast"
+        android:layout_width="match_parent"
+        android:layout_height="410dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:id="@+id/listview_forecast"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+    <EditText
+        android:layout_width="210dp"
+        android:layout_height="66dp"
+        android:id="@+id/editText"
+        android:layout_gravity="left|top"
+        android:layout_toStartOf="@+id/button" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="100dp"
+        android:layout_height="63dp"
+        android:text="Go"
+        android:id="@+id/button"
+        android:layout_gravity="right|top"
+        android:layout_alignTop="@+id/editText"
+        android:layout_alignEnd="@+id/listview_forecast" />
+
+    <TextView
+        android:layout_width="203dp"
+        android:layout_height="wrap_content"
+        android:text="Enter a zip code"
+        android:id="@+id/textView"
+        android:layout_gravity="left|top" />
 </RelativeLayout>
