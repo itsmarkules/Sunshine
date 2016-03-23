@@ -1,10 +1,14 @@
 package sjcnymobile.sunshine;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -22,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,17 +74,20 @@ public class ForecastFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    EditText eT;
+    Button btn;
     ArrayAdapter<String> mForecastAdapter;
 
 //   String[] humidity = {"h1","h2","h3","h4","h5","h6","h7"};
 //    String[] pressure = {"p1","p2","p3","p4","p5","p6","p7"};
 //    String[] wind = {"w1","w2","w3","w4","w5","w6","w7"};
-
+    private static String IMG_URL = "http://openweathermap.org/img/w/";
     String[] humidity = new String[100];
     String[] pressure = new String[100];
     String[] wind = new String[100];
     String[] iconImage = new String[7];
+   // String iconString = "http://openweathermap.org/img/w/";
+   // Drawable test;
 
 
     @Override
@@ -106,13 +116,29 @@ public class ForecastFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
+        btn = (Button) rootView.findViewById(R.id.button);
+        eT = (EditText) rootView.findViewById(R.id.editText);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                FetchWeatherTask weatherTask = new FetchWeatherTask();
+                System.out.println(eT.getText().toString());
+                weatherTask.execute(eT.getText().toString());
+
+            }
+        });
+
         new FetchWeatherTask().execute("11778");
+
        /* try {
             new FetchWeatherTask().showDetails("11778");
         } catch (JSONException e) {
             e.printStackTrace();
         }*/
-
+//final Bitmap bmp = null;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l){
@@ -125,7 +151,10 @@ public class ForecastFragment extends Fragment {
                 intent.putExtra("humidity",humidity[position]);
                 intent.putExtra("pressure",pressure[position]);
                 intent.putExtra("wind",wind[position]);
-                intent.putExtra("icon", iconImage[position]);
+               // intent.putExtra("icon", iconImage[position]);
+               // BitmapFactory.decodeByteArray(getImage(iconImage[position]), 0, (getImage(iconImage[position])).length);
+
+
                 startActivity(intent);
             }
         });
@@ -134,6 +163,37 @@ public class ForecastFragment extends Fragment {
     }
 
 
+  /*  final public byte[] getImage(String code) {
+        HttpURLConnection con = null ;
+        InputStream is = null;
+        try {
+            con = (HttpURLConnection) ( new URL(IMG_URL + code)).openConnection();
+            con.setRequestMethod("GET");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.connect();
+
+// Let's read the response
+            is = con.getInputStream();
+            byte[] buffer = new byte[1024];
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            while ( is.read(buffer) != -1)
+                baos.write(buffer);
+
+            return baos.toByteArray();
+        }
+        catch(Throwable t) {
+            t.printStackTrace();
+        }
+        finally {
+            try { is.close(); } catch(Throwable t) {}
+            try { con.disconnect(); } catch(Throwable t) {}
+        }
+
+        return null;
+
+    }*/
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
     {
 
@@ -154,6 +214,8 @@ public class ForecastFragment extends Fragment {
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
         }
+
+
 
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
@@ -196,9 +258,9 @@ public class ForecastFragment extends Fragment {
                 //ImageView i = dayForecast.iconData
 
 
-                humidity[i] = "Humidity: " + h;
-                pressure[i] = "Pressure: " + p;
-                wind[i] = "Wind Speed: " + w;
+                humidity[i] = h;
+                pressure[i] = p;
+                wind[i] = w;
 
                 long dateTime;
 
@@ -211,6 +273,7 @@ public class ForecastFragment extends Fragment {
 
 
                 iconImage[i] = weatherObject.getString((OWM_ICON));
+
                 //image = icon;
 
                 // Temperatures are in a child object called "temp".  Try not to name variables
@@ -307,6 +370,7 @@ public class ForecastFragment extends Fragment {
                 forecastJsonStr = buffer.toString();
 
                 Log.v(LOG_TAG, "Forecast string: " + forecastJsonStr);
+
             }
             catch (IOException e)
             {
